@@ -6,6 +6,17 @@ return {
   enabled = true,
   -- Pass options to the setup function of conform.nvim
   opts = {
+    -- You can still have format_on_save for files where you want full file formatting
+    format_on_save = function(bufnr)
+      -- If the buffer is a C# file, we'll handle it separately, so return false here
+      -- Otherwise, let conform handle the full file format
+      local filetype = vim.bo[bufnr].filetype
+      if filetype == "cs" then
+        return false -- We'll handle C# with lsp-format-modifications
+      end
+      -- For other filetypes, allow conform to format on save
+      return true
+    end,
     -- Configure formatters per filetype
     formatters_by_ft = {
       -- Set prettier as the formatter for typescript and javascript
